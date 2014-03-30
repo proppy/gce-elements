@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+<head>
+	<title>gce-web-components</title>
+        <script src="bower_components/platform/platform.js"></script>
+        <link rel="import" href="gce-web-components.html">
+</head>
+
+<polymer-element name="gce-to-docker">
+  <template>
+    <label for="google-cloud-project-id">Google Cloud Project:</label>
+    <input id="google-cloud-project-id" type="text" value="{{ project }}">
+    <gce-start-instance
+       client_id="281507154628-duogmhpfck530ec295velabshro0k4pb.apps.googleusercontent.com"
+       project="{{ project }}"
+       zone="us-central1-a"   
+       name="debian2docker-vm"
+       machine_type="f1-micro"
+       disk1_image="debian2docker-1395924258"
+       disk1_size="10"
+       disk2_image="debian2docker-disk"
+       disk2_size="200">
+    </gce-start-instance>
+  </template>
+  <script>
+    Polymer('gce-to-docker', {
+      project: 'proppy-docker'
+    });
+  </script>
+</polymer-element>
+
+<gce-to-docker></gce-to-docker>
+
+<body>

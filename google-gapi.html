@@ -1,0 +1,45 @@
+<script>
+  google_gapi_loaded = (function() {
+    var loaded = false;
+    var callback;
+    return function(cb) {
+      if (cb) {
+        callback = cb;
+      } else {
+        loaded = true;
+      }
+      if (callback && loaded) {
+        callback();
+      }
+    };
+  })();
+
+</script>
+<script src="https://apis.google.com/js/client.js?onload=google_gapi_loaded"></script>
+
+<polymer-element name="google-gapi" attributes="client_id scopes apis">
+  <template>
+  </template>
+  <script>
+    Polymer('google-gapi', {
+      ready: function() {
+      },
+      auth: function(cb, again) {
+        google_gapi_loaded(function() {
+          gapi.auth.authorize({
+            client_id: this.client_id,
+            scope: this.scopes,
+            immediate: again == true
+          }, function(result) {
+            this.apis.split(' ').forEach(function(apiStr) {
+              var api = apiStr.split('@');
+              var apiName = api[0], apiVersion = api[1];
+              gapi.client.load(apiName, apiVersion);
+            }.bind(this));
+            cb(result);
+          }.bind(this));
+        }.bind(this));
+      }
+    });
+  </script>
+</polymer-element>

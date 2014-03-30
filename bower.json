@@ -1,0 +1,17 @@
+{
+  "name": "gce-web-components",
+  "version": "0.0.0",
+  "authors": [
+    "Johan Euphrosine <proppy@google.com>"
+  ],
+  "license": "Apache",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+  }
+}

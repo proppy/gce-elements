@@ -1,0 +1,88 @@
+<link rel="import" href="bower_components/polymer/polymer.html">
+<link rel="import" href="google-gapi.html">
+
+<polymer-element name="gce-start-instance" attributes="client_id project zone name machine_type disk1_image disk1_size disk2_image disk2_size">
+<template>
+  <google-gapi id="gapi" client_id="{{ client_id }}" scopes="https://www.googleapis.com/auth/compute" apis="compute@v1"></google-gapi>
+  <template if="{{ authorized == false }}">
+    <button on-click="{{ authorize }}">authorize</button>
+  </template>
+  <template if="{{ authorized == true }}">
+    <button on-click="{{ startInstance }}">start instance</button>
+  </template>
+</template>
+<script>
+    Polymer('gce-start-instance', {
+      authorized: undefined,
+      ready: function() {
+        this.$.gapi.auth(function(result) {
+          console.log('re auth result', result);
+          this.authorized = result != null;
+        }.bind(this), true);
+      },
+      authorize: function() {
+        this.$.gapi.auth(function(result) {
+          console.log('auth result', result);
+          this.authorized = result != null;
+        }.bind(this));
+      },
+      insertDisk: function(disk, cb) {
+        var payload = {
+          project: this.project,
+          zone: this.zone,
+          resource: {
+            name: this[disk + '_image'] + '-' + Date.now(),
+            sourceImage: this.url('/images/' + this[disk + '_image']),
+            sizeGb: this[disk + '_size']
+          }
+        };
+        console.log(payload);
+        gapi.client.compute.disks.insert(payload).execute(cb);
+      },
+      insertInstance: function(disks, cb) {
+        var payload = {
+          project: this.project,
+          zone: this.zone,
+          resource: {
+            name: this.name + '-' + Date.now(),
+            machineType: this.zoneUrl('/machineTypes/' + this.machine_type),
+            disks: [
+              { 'type': 'PERSISTENT', boot: true, source: disks[0] },
+              { 'type': 'PERSISTENT', source: disks[1] },
+            ],
+            networkInterfaces: [{
+              network: this.url('/global/networks/default'),
+              accessConfigs: [{
+                type: 'ONE_TO_ONE_NAT'
+              }]
+            }]
+          }
+        };
+        console.log(payload);
+        gapi.client.compute.instances.insert(payload).execute(cb);
+      },
+      zoneUrl: function(resource) {
+        return ('https://www.googleapis.com/compute/v1'
+                + '/projects/' + this.project
+                + '/zones/' + this.zone
+                + resource);
+      },
+      url: function(resource) {
+        return ('https://www.googleapis.com/compute/v1'
+                + '/projects/' + this.project
+                + resource);
+      },
+      startInstance: function() {
+        this.insertDisk('disk1', function(result_disk1) {
+          console.log(result_disk1);
+          this.insertDisk('disk2', function(result_disk2) {
+            console.log(result_disk2);
+            this.insertInstance([result_disk1.targetLink, result_disk2.targetLink], function(result) {
+              console.log(result);
+            });
+          }.bind(this));
+        }.bind(this));
+      }
+    });
+</script>
+</polymer-element>
