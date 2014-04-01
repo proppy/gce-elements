@@ -5,6 +5,7 @@
         <script src="bower_components/platform/platform.js"></script>
         <link rel="import" href="gce-web-components.html">
 </head>
+<body>
 
 <polymer-element name="gce-to-docker">
   <template>
@@ -13,7 +14,7 @@
     <gce-start-instance
        client_id="281507154628-duogmhpfck530ec295velabshro0k4pb.apps.googleusercontent.com"
        project="{{ project }}"
-       zone="us-central1-a"   
+       zone="us-central1-a"
        name="debian2docker-vm"
        machine_type="f1-micro"
        disk1_image="debian2docker-1395924258"
@@ -29,4 +30,5 @@
 
 <gce-to-docker></gce-to-docker>
 
-<body>
+</body>
+</html>
