@@ -1,0 +1,47 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+gcloud-config holds a Google Cloud Project configuration.
+
+##### Example
+
+    <google-gapi ...></google-gapi>
+    <gcloud-config project="my-project-id"></gcloud-config>
+
+@element gcloud-config
+@blurb gcloud-config holds a Google Cloud Project configuration.
+@status alpha
+@url https://github.com/proppy/gce-elements
+-->
+<polymer-element name="gcloud-config" attributes="project gapi">
+
+  <template>
+
+    <content></content>
+
+  </template>
+
+  <script>
+
+    Polymer({
+      /**
+       * The `project` attribute is a string containing the Google Cloud Project ID.
+       *
+       * @attribute project
+       * @type string
+       */
+      project: '',
+
+      ready: function() {
+      },
+
+      gapiChanged: function() {
+        document.querySelector('google-api').auth(function(result) {
+          console.log(result);
+        });
+      }
+    });
+
+  </script>
+
+</polymer-element>
