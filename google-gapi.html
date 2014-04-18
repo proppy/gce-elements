@@ -1,22 +1,23 @@
-<script>
-  google_gapi_loaded = (function() {
-    var loaded = false;
-    var callback;
-    return function(cb) {
-      if (cb) {
-        callback = cb;
-      } else {
-        loaded = true;
-      }
-      if (callback && loaded) {
-        callback();
-      }
-    };
-  })();
+<link rel="import" href="../polymer/polymer.html">
 
-</script>
-<script src="https://apis.google.com/js/client.js?onload=google_gapi_loaded"></script>
+<!--
+google-gapi provides access to the Google JavaScript client library.
 
+##### Example
+
+    <google-gapi client_id="my-client-id" scope="https://www.googleapis.com/auth/compute" apis="compute@v1"></google-gapi>
+    <script>
+      var gapi = document.querySelector('google-gapi');
+      gapi.auth(function(result) {
+        gapi.client.compute.instances.insert(...).execute(...);
+      });
+    </script>
+
+@element google-gapi
+@blurb google-gapi provides access to the Google JavaScript client library.
+@status alpha
+@url https://github.com/proppy/gce-elements
+-->
 <polymer-element name="google-gapi" attributes="client_id scopes apis">
   <template>
   </template>
@@ -43,3 +44,22 @@
     });
   </script>
 </polymer-element>
+
+<script>
+  google_gapi_loaded = (function() {
+    var loaded = false;
+    var callback;
+    return function(cb) {
+      if (cb) {
+        callback = cb;
+      } else {
+        loaded = true;
+      }
+      if (callback && loaded) {
+        callback();
+      }
+    };
+  })();
+
+</script>
+<script src="https://apis.google.com/js/client.js?onload=google_gapi_loaded"></script>
