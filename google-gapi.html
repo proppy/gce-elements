@@ -35,9 +35,8 @@ google-gapi provides access to the Google JavaScript client library.
             this.apis.split(' ').forEach(function(apiStr) {
               var api = apiStr.split('@');
               var apiName = api[0], apiVersion = api[1];
-              gapi.client.load(apiName, apiVersion);
+              gapi.client.load(apiName, apiVersion, cb);
             }.bind(this));
-            cb(result);
           }.bind(this));
         }.bind(this));
       }
@@ -60,6 +59,5 @@ google-gapi provides access to the Google JavaScript client library.
       }
     };
   })();
-
 </script>
 <script src="https://apis.google.com/js/client.js?onload=google_gapi_loaded"></script>

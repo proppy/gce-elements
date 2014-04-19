@@ -13,14 +13,7 @@ gcloud-config holds a Google Cloud Project configuration.
 @status alpha
 @url https://github.com/proppy/gce-elements
 -->
-<polymer-element name="gcloud-config" attributes="project gapi">
-
-  <template>
-
-    <content></content>
-
-  </template>
-
+<polymer-element name="gcloud-config" attributes="project">
   <script>
 
     Polymer({
@@ -30,16 +23,7 @@ gcloud-config holds a Google Cloud Project configuration.
        * @attribute project
        * @type string
        */
-      project: '',
-
-      ready: function() {
-      },
-
-      gapiChanged: function() {
-        document.querySelector('google-api').auth(function(result) {
-          console.log(result);
-        });
-      }
+      project: ''
     });
 
   </script>
