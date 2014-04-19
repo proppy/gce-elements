@@ -56,7 +56,7 @@ gce-image creates a Google Compute Engine image.
           var payload = {
             project: this.gcloud.project,
             resource: {
-              name: this.id,
+              name: this.name,
               sourceType: 'RAW',
               rawDisk: {
                 source: this.src
@@ -69,11 +69,14 @@ gce-image creates a Google Compute Engine image.
 
       wait: function(result) {
         console.log(result);
-        gapi.client.compute.globalOperations.get({operation: result.id}).execute(function(result) {
+        gapi.client.compute.globalOperations.get({
+          project: this.gcloud.project,
+          operation: result.name
+        }).execute(function(result) {
           if (result.status != "DONE") {
             this.async(this.wait, result, 1000);
           } else {
-            this.fire('resource-created');
+            this.fire('done', result);
           }
         }.bind(this));
        }

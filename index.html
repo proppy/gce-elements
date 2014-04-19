@@ -9,7 +9,7 @@
 
   <google-gapi client_id="281507154628-duogmhpfck530ec295velabshro0k4pb.apps.googleusercontent.com" scopes="https://www.googleapis.com/auth/compute" apis="compute@v1"></google-gapi>
   <gcloud-config project="proppy-containers"></gcloud-config>
-  <gce-image id="d2d-root-img-id" name="d2d-root-img" src="http://storage.googleapis.com/proppy-docker/debian2docker-1395924258.tar.gz" on-resource-created="rootImageCreated"></gce-image>
+  <gce-image id="d2d-root-img-id" name="d2d-root-img" src="http://storage.googleapis.com/proppy-docker/debian2docker-1395924258.tar.gz"></gce-image>
   <button onclick="document.querySelector('#d2d-root-img-id').go()">create root image</button>
   <gce-image id="d2d-data-img-id" name="d2d-data-img" src="http://storage.googleapis.com/proppy-docker/debian2docker-disk.tar.gz"></gce-image>
   <gce-disk id="d2d-root-disk-id" name="d2d-root-disk" zone="us-central1-a" image="d2d-root-img"></gce-disk>
@@ -19,9 +19,9 @@
     <gce-attach-disk disk="d2d-data-disk"></gce-attach-disk>
   </gce-instance>
   <script>
-    function rootImageCreated() {
-      console.log(rootImageCreated);
-    }
+    document.querySelector('#d2d-root-img-id').addEventListener('done', function(e) {
+      console.log('operation completed:', e.detail);
+    });
   </script>
 </body>
 </html>
