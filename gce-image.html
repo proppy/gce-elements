@@ -1,0 +1,84 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<!--
+gce-image creates a Google Compute Engine image.
+
+##### Example
+
+    <google-gapi ...></google-gapi>
+    <gcloud-config ...></gcloud-config>
+    <gce-image id="my-image" src="gs://my-bucket/my-filesystem.tar.gz"></gce-image>
+    <script>
+      document.querySelector('#my-image').go(function(result) {
+        console.log(result);
+      });
+    </script>
+
+@element gce-image
+@blurb gce-image creates a Google Compute Engine image from a filesystem tarball on Google Cloud Storage.
+@status alpha
+@url https://github.com/proppy/gce-elements
+-->
+<polymer-element name="gce-image" attributes="name src">
+
+  <script>
+
+    Polymer({
+      /**
+       * The `name` attribute is the name of the image resource.
+       *
+       * @attribute name
+       * @type string
+       */
+      name: '',
+
+      /**
+       * The `src` attribute points to the image filesystem tarball on Google Cloud Storage.
+       *
+       * @attribute src
+       * @type string
+       */
+      src: '',
+
+      ready: function() {
+        this.gapi = document.querySelector('google-gapi');
+        this.gcloud = document.querySelector('gcloud-config');
+      },
+
+      /**
+       * The `go` method creates the Google Cloud Engine image.
+       *
+       * @method go
+       * @return {Object} Returns undefined.
+       */
+      go: function() {
+        this.gapi.auth(function(result) {
+          var payload = {
+            project: this.gcloud.project,
+            resource: {
+              name: this.id,
+              sourceType: 'RAW',
+              rawDisk: {
+                source: this.src
+              }
+            }
+          };
+          gapi.client.compute.images.insert(payload).execute(this.wait.bind(this));
+        }.bind(this));
+      },
+
+      wait: function(result) {
+        console.log(result);
+        gapi.client.compute.globalOperations.get({operation: result.id}).execute(function(result) {
+          if (result.status != "DONE") {
+            this.async(this.wait, result, 1000);
+          } else {
+            this.fire('resource-created');
+          }
+        }.bind(this));
+       }
+    });
+
+  </script>
+
+</polymer-element>
